@@ -157,4 +157,4 @@ async function updateMissions(userSummary) {
     }
 }
 
-setInterval(run().catch(console.error), 24 * 60 * 60 * 1000); 
+setInterval(run, 24 * 60 * 60 * 1000); 
