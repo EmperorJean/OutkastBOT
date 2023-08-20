@@ -156,4 +156,5 @@ async function updateMissions(userSummary) {
         logger.error("Error fetching missions, the servers could be down, please alert the devs on discord.")
     }
 }
-run().catch(console.error); 
+
+setInterval(run().catch(console.error), 24 * 60 * 60 * 1000); 
