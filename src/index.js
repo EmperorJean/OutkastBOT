@@ -10,6 +10,7 @@ const privateKeyBuffer = Buffer.from(WALLET_KEY, 'hex');
 const logger = require('./utils/logger');
 const provider = new HDWalletProvider(WALLET_KEY, infuraURL);
 const web3 = new Web3(provider);
+const fetch = require('node-fetch');
 
 let accounts = [];
 let user = undefined
