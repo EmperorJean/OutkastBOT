@@ -11,10 +11,6 @@ const logger = require('./utils/logger');
 const provider = new HDWalletProvider(WALLET_KEY, infuraURL);
 const web3 = new Web3(provider);
 const fetch = require('node-fetch');
-<<<<<<< HEAD
-=======
-const { log } = require('winston');
->>>>>>> 63f5cfa (Added an interval for script to auto run)
 
 let accounts = [];
 let user = undefined
