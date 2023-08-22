@@ -11,6 +11,10 @@ const logger = require('./utils/logger');
 const provider = new HDWalletProvider(WALLET_KEY, infuraURL);
 const web3 = new Web3(provider);
 const fetch = require('node-fetch');
+<<<<<<< HEAD
+=======
+const { log } = require('winston');
+>>>>>>> 63f5cfa (Added an interval for script to auto run)
 
 let accounts = [];
 let user = undefined
@@ -40,13 +44,17 @@ async function run() {
     }
 
     // Sending all squads on missions
-    for (let i = 0; i < squads.length; i++) {
-        let squad = squads[i];
-        squad.sort((a, b) => a - b);
+    if (closestMission) {
+        for (let i = 0; i < squads.length; i++) {
+            let squad = squads[i];
+            squad.sort((a, b) => a - b);
 
-        let msg = getMessage(false, closestMission.id, closestMission.name, user.nonce, squads[i]);
-        let signature = await getSignature(msg);
-        await dispatch(squad, signature, closestMission.id);
+            let msg = getMessage(false, closestMission.id, closestMission.name, user.nonce, squads[i]);
+            let signature = await getSignature(msg);
+            await dispatch(squad, signature, closestMission.id);
+        }
+    } else {
+        logger.info("No missions to send outkasts on")
     }
 
     logger.info("Everything is complete")
@@ -157,5 +165,5 @@ async function updateMissions(userSummary) {
         logger.error("Error fetching missions, the servers could be down, please alert the devs on discord.")
     }
 }
-
+run();
 setInterval(run, 24 * 60 * 60 * 1000); 
