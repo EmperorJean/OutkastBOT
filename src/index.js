@@ -31,10 +31,10 @@ async function run() {
                 logger.info(`Found active mission: ${activeMissionsList[i].name}, it's not ready to claim though`)
                 continue;
             }
-            logger.info(`Found active missions, claiming ${activeMissionsList[i]}`);
-            let msg = await getMessage(true, activeMissionsList[i].id, activeMissionsList[i].name, user.nonce, squads[i]);
+            logger.info(`Found active missions, claiming ${activeMissionsList[i].name}`);
+            let msg = await getMessage(true, activeMissionsList[i].name, user.nonce, squads[i]);
             let signature = await getSignature(msg);
-            await claim(activeMissionsList[i].id, msg, signature)
+            await claim(activeMissionsList[i].id, signature)
         }
 
     }
@@ -45,7 +45,7 @@ async function run() {
             let squad = squads[i];
             squad.sort((a, b) => a - b);
 
-            let msg = getMessage(false, closestMission.id, closestMission.name, user.nonce, squads[i]);
+            let msg = getMessage(false, closestMission.name, user.nonce, squads[i]);
             let signature = await getSignature(msg);
             await dispatch(squad, signature, closestMission.id);
         }
@@ -147,13 +147,18 @@ async function updateMissions(userSummary) {
         }
 
         // Filter out missions starting in the future
-        const past24HoursMissions = missions.filter(mission => mission.start > currentTime - 86400 && mission.start <= currentTime);
-        past24HoursMissions.sort((a, b) => (a.end - a.start) - (b.end - b.start));
-        closestMission = past24HoursMissions[0];
+        const past24HoursMissions = missions.filter(mission => mission.start > currentTime - 86400*4 && mission.start <= currentTime);
+        if (past24HoursMissions) {
+            past24HoursMissions.sort((a, b) => (a.end - a.start) - (b.end - b.start));
+            closestMission = past24HoursMissions[0];
 
-        if (closestMission) {
-            logger.info("Mission that ends the quickest:" + closestMission.id);
-            logger.info("Mission starts at:" + new Date(closestMission.start * 1000).toLocaleString() + "and ends at:" + new Date(closestMission.end * 1000).toLocaleString());
+            if (closestMission) {
+                logger.info("Mission that ends the quickest:" + closestMission.id);
+                logger.info("Mission starts at:" + new Date(closestMission.start * 1000).toLocaleString() + "and ends at:" + new Date(closestMission.end * 1000).toLocaleString());
+            }
+        } else {
+            logger.info("No missions found in the pass, terminating early");
+            return;
         }
     }
     catch (e) {
