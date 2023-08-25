@@ -147,7 +147,7 @@ async function updateMissions(userSummary) {
         }
 
         // Filter out missions starting in the future
-        const past24HoursMissions = missions.filter(mission => mission.start > currentTime - 86400*4 && mission.start <= currentTime);
+        const past24HoursMissions = missions.filter(mission => mission.end > currentTime && mission.start <= currentTime);
         if (past24HoursMissions) {
             past24HoursMissions.sort((a, b) => (a.end - a.start) - (b.end - b.start));
             closestMission = past24HoursMissions[0];
