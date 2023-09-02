@@ -20,6 +20,8 @@ let squads = []
 
 async function run() {
     accounts = await web3.eth.getAccounts();
+    activeMissionsList = [];
+    squads = [];
     logger.info(`Connected account: ${accounts[0]}`)
     await getUser();
 
